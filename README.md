@@ -70,6 +70,18 @@ end
 Virus scan: OK - /path/to/blue-devil.png (ClamAV 0.98.3/19559/Thu Oct 30 06:39:46 2014)
 ```
 
+### The NullScannerAdapter
+
+In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter that logs a message and returns a normal scan result (instance of Ddr::Antivirus::ScanResult).
+
+```ruby
+>> Ddr::Antivirus.scanner_adapter = :null
+=> :null
+>> Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
+W, [2014-10-30T16:21:24.349542 #76244]  WARN -- : File not scanned -- using :null scanner adapter.
+I, [2014-10-30T16:21:24.350582 #76244]  INFO -- : #<Ddr::Antivirus::ScanResult:0x007ff6c98d0500 @raw="File not scanned -- using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-10-30 20:21:24 UTC, @version="ddr-antivirus 1.0.0.rc1">
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/[my-github-username]/ddr-antivirus/fork )
