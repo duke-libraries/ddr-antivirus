@@ -1,5 +1,8 @@
 # Ddr::Antivirus
 
+[![Gem Version](https://badge.fury.io/rb/ddr-antivirus.svg)](http://badge.fury.io/rb/ddr-antivirus)
+[![Build Status](https://travis-ci.org/duke-libraries/ddr-antivirus.svg?branch=master)](https://travis-ci.org/duke-libraries/ddr-antivirus)
+
 Antivirus scanner for Ruby applications.
 
 ## Installation
