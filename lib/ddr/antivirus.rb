@@ -30,7 +30,7 @@ module Ddr
     # Custom logger
     # Defaults to Rails logger if Rails is loaded; otherwise logs to STDERR.
     mattr_accessor :logger do
-      defined?(Rails) ? Rails.logger : Logger.new(STDERR)    
+      defined?(Rails) && Rails.logger ? Rails.logger : Logger.new(STDERR)    
     end
 
     # Scanner adapter
