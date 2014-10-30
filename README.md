@@ -24,23 +24,29 @@ Ddr::Antivirus intentionally does *not* include `clamav` as a runtime dependency
 
     gem 'clamav'
 
-Ddr::Antivirus will use an adapter class for ClamAV if the Ruby gem is installed.
+Ddr::Antivirus will automatically use an adapter class for ClamAV if the Ruby gem is installed.
 
 ## Usage
 
 ### Scanning ###
 
+Class: `Ddr::Antivirus::Scanner`
+
 ```ruby
 require "ddr-antivirus"
 
+# Using the class method .scan
 result = Ddr::Antivirus::Scanner.scan(path)
 
+# Using the instance method #scan with a block
 Ddr::Antivirus::Scanner.new do |scanner|
   result = scanner.scan(path)
 end
 ```
 
 ### Results
+
+Class: `Ddr::Antivirus::ScanResult`
 
 ```ruby
 >> require "ddr-antivirus"
