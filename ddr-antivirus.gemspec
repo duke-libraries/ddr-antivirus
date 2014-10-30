@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["dchandekstark@gmail.com"]
   spec.summary       = %q{Antivirus scanning service.}
   spec.description   = %q{Antivirus scanning service.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/duke-libraries/ddr-antivirus"
   spec.license       = "BSD-3-Clause"
 
   spec.files         = `git ls-files -z`.split("\x0")
