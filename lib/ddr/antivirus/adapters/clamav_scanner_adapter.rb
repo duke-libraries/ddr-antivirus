@@ -12,10 +12,17 @@ module Ddr
         end
 
         def reload!
-          # ClamAV is supposed to reload the database if changed (1 = successful, 0 = unnecessary)
-          # but operation only succeeds when unneccesary and raises RuntimeError when the db needs
-          # to be reloaded, in which case, loaddb must be called.
-          engine.loaddb unless engine.reload == 0
+          #
+          # ClamAV.instance.reload is supposed to reload the database if changed and return:
+          #
+          # 0 => unnecessary
+          # 1 => successful
+          # 2 => error (undocumented)
+          #
+          # However, reload raises a RuntimeError when the db needs to be reloaded, 
+          # in which case, loaddb must be called.
+          #
+          engine.loaddb unless [0, 1].include?(engine.reload)
         rescue RuntimeError
           engine.loaddb
         end
