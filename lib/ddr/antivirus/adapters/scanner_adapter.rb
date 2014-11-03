@@ -10,6 +10,10 @@ module Ddr
           raise NotImplementedError
         end
 
+        def config
+          Ddr::Antivirus.adapter_config
+        end
+
       end
     end
   end
