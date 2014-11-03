@@ -19,15 +19,19 @@ Or install it yourself as:
 
     $ gem install ddr-antivirus
 
-## ClamAV Dependencies
+## ClamAV
 
-For system dependencies, see https://github.com/eagleas/clamav.
-
-Ddr::Antivirus intentionally does *not* include `clamav` as a runtime dependency.  Rather you should add to you application's Gemfile:
+Ddr::Antivirus does *not* include the `clamav` gem as a runtime dependency.  Add to your application's Gemfile:
 
     gem 'clamav'
 
+For system dependencies, see https://github.com/eagleas/clamav.
+
 Ddr::Antivirus will automatically use an adapter class for ClamAV if the Ruby gem is installed.
+
+## ClamAV Daemon Client (clamdscan)
+
+Ddr::Antivirus will automatically use an adapter class for `clamdscan` if the executable is on the user's path.
 
 ## Usage
 
@@ -47,9 +51,13 @@ Ddr::Antivirus::Scanner.new do |scanner|
 end
 ```
 
+The scanner raises an exception (Ddr::Antivirus::VirusFoundError) if a virus is found.
+
 ### Results
 
 Class: `Ddr::Antivirus::ScanResult`
+
+A scanner adapter may subclass the base class to parse the raw result properly.
 
 ```ruby
 >> require "ddr-antivirus"
@@ -74,14 +82,14 @@ Class: `Ddr::Antivirus::ScanResult`
 >> result.raw
 => 0 # ClamAV example
 
-# String representation
+# String representation (example)
 >> puts result.to_s
-Virus scan: OK - /path/to/blue-devil.png (ClamAV 0.98.3/19559/Thu Oct 30 06:39:46 2014)
+=> /path/to/blue-devil.png: OK (ClamAV 0.98.3/19559/Thu Oct 30 06:39:46 2014)
 ```
 
 ### The NullScannerAdapter
 
-In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter that logs a message and returns a normal scan result (instance of Ddr::Antivirus::ScanResult).
+In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter that logs a message and returns a scan result object (instance of Ddr::Antivirus::ScanResult).
 
 ```ruby
 >> Ddr::Antivirus.scanner_adapter = :null

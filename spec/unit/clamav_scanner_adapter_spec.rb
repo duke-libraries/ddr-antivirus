@@ -1,11 +1,12 @@
-require 'shared_examples_for_scan_results'
+require "shared_examples_for_scan_results"
+require "ddr/antivirus/adapters/clamav_scanner_adapter"
 
 module Ddr
   module Antivirus
     module Adapters
       RSpec.describe ClamavScannerAdapter do
 
-        let(:path) { File.expand_path(File.join("..", "fixtures", "blue-devil.png"), __FILE__) }
+        let(:path) { File.expand_path(File.join("..", "..", "fixtures", "blue-devil.png"), __FILE__) }
 
         describe "#scan" do
           context "when the db is already loaded" do
