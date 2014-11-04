@@ -19,19 +19,13 @@ Or install it yourself as:
 
     $ gem install ddr-antivirus
 
-## ClamAV
+## How It Works
 
-Ddr::Antivirus does *not* include the `clamav` gem as a runtime dependency.  Add to your application's Gemfile:
+Ddr::Antivirus does *not* provide a virus scanning engine as a runtime dependency. Instead, it will select a scanner adapter class for the software it finds in your environment following this procedure:
 
-    gem 'clamav'
-
-For system dependencies, see https://github.com/eagleas/clamav.
-
-Ddr::Antivirus will automatically use an adapter class for ClamAV if the Ruby gem is installed.
-
-## ClamAV Daemon Client (clamdscan)
-
-Ddr::Antivirus will automatically use an adapter class for `clamdscan` if the executable is on the user's path.
+- If the [clamav](https://github.com/eagleas/clamav) gem is available, it will select the ClamavScannerAdapter.
+- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the ClamdScannerAdapter.
+- Otherwise, it will select the [NullScannerAdapter](#the-nullscanneradapter), which does not perform virus scans and is intended for testing and development.
 
 ## Usage
 
