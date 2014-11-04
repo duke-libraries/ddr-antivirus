@@ -34,11 +34,25 @@ module Ddr
         class ClamavScanResult < Ddr::Antivirus::ScanResult
 
           def virus_found
-            raw if raw.is_a?(String)
+            raw if has_virus?
+          end
+
+          def has_virus?
+            ![0, 1].include?(raw)
           end
 
           def error?
             raw == 1
+          end
+
+          def status
+            return "FOUND #{virus_found}" if has_virus?
+            return "ERROR" if error?
+            "OK"
+          end
+
+          def to_s
+            "#{file_path}: #{status} (#{version})"
           end
 
           def default_version

@@ -6,11 +6,8 @@ module Ddr
       #
       class NullScannerAdapter < ScannerAdapter
 
-        RESULT = "File not scanned -- using :null scanner adapter."
-
         def scan(path)
-          Ddr::Antivirus.logger.warn(RESULT)
-          Ddr::Antivirus::ScanResult.new(RESULT, path)
+          Ddr::Antivirus::ScanResult.new("#{path}: NOT SCANNED - using :null scanner adapter.", path)
         end
 
       end
