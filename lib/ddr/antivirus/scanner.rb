@@ -20,7 +20,7 @@ module Ddr
         result = adapter.scan(path)
         raise Ddr::Antivirus::VirusFoundError, result if result.has_virus?
         logger.error("Antivirus scanner error (#{result.version})") if result.error?
-        logger.info(result)
+        logger.info(result.to_s)
         result
       end
 

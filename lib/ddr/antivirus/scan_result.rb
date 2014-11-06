@@ -23,42 +23,25 @@ module Ddr
       end
 
       # Subclasses may override to provide description of virus found.
-      # Should return nil if no virus found.
       def virus_found; end
 
+      # Subclasses should override
       def has_virus?
         !virus_found.nil?
       end
 
-      def status
-        return status_found if has_virus?
-        return status_error if error?
-        status_ok
+      # Subclasses may override to indicate an error condition (not necessarily an exception).
+      def error?
+        false
       end
 
       def ok?
         !(has_virus? || error?)
       end
 
-      # Subclasses may implement to indicate an error condition (not necessarily an exception).
-      def error?
-        false
-      end
-
-      def status_error
-        "ERROR"
-      end
-
-      def status_ok
-        "OK"
-      end
-
-      def status_found
-        "FOUND #{virus_found}"
-      end
-
+      # Subclasses may override
       def to_s
-        "Virus scan: #{status} - #{file_path} (#{version})"
+        "#{raw} (#{version})"
       end
 
     end

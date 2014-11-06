@@ -24,15 +24,9 @@ shared_examples "a successful scan result" do
   it "should be ok" do
     expect(subject).to be_ok
   end
-  it "should have OK status" do
-    expect(subject.status).to eq "OK"
-  end
 end
 
 shared_examples "an error scan result" do
-  it "should have ERROR status" do
-    expect(subject.status).to eq("ERROR")
-  end
   it "should have an error" do
     expect(subject).to be_error
   end
@@ -46,9 +40,6 @@ shared_examples "an error scan result" do
 end
 
 shared_examples "a virus scan result" do
-  it "should have FOUND status" do
-    expect(subject.status).to match(/^FOUND/)
-  end
   it "shoud have a virus" do
     expect(subject.virus_found).not_to be_nil
     expect(subject).to have_virus
