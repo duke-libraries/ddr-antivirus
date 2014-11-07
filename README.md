@@ -24,7 +24,7 @@ Or install it yourself as:
 Ddr::Antivirus does *not* provide a virus scanning engine as a runtime dependency. Instead, it will select a scanner adapter class for the software it finds in your environment following this procedure:
 
 - If the [clamav](https://github.com/eagleas/clamav) gem is available, it will select the `ClamavScannerAdapter`.
-- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.
+- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.  Ddr::Antivirus *does not* manage clamd -- that includes checking its status, starting or reloading the database.  These tasks must be managed externally.
 - Otherwise, it will select the [`NullScannerAdapter`](#the-nullscanneradapter).
 
 The auto-selection process may be overridden by configuration:
