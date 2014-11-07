@@ -85,8 +85,17 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 => 0 # ClamAV example
 
 # String representation (example)
->> puts result.to_s
-=> /path/to/blue-devil.png: OK (ClamAV 0.98.3/19559/Thu Oct 30 06:39:46 2014)
+>> result.to_s
+=> "/path/to/blue-devil.png: OK (ClamAV 0.98.3/19595/Thu Nov  6 11:32:29 2014)"
+```
+
+### Logging
+
+In a Rails application, Ddr::Antivirus will log messages to the Rails logger by default. The fallback logger writes to the null device (`File::NULL`).  To configure the logger:
+
+```ruby
+require "logger"
+Ddr::Antivirus.logger = Logger.new(...)
 ```
 
 ### The NullScannerAdapter
@@ -97,8 +106,8 @@ In order to avoid the overhead of ClamAV in test and/or development environments
 >> Ddr::Antivirus.scanner_adapter = :null
 => :null
 >> Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
-W, [2014-10-30T16:21:24.349542 #76244]  WARN -- : File not scanned -- using :null scanner adapter.
-I, [2014-10-30T16:21:24.350582 #76244]  INFO -- : #<Ddr::Antivirus::ScanResult:0x007ff6c98d0500 @raw="File not scanned -- using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-10-30 20:21:24 UTC, @version="ddr-antivirus 1.0.0.rc1">
+I, [2014-11-07T15:58:17.706866 #82651]  INFO -- : /path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter. (ddr-antivirus 1.2.0)
+=> #<Ddr::Antivirus::ScanResult:0x007f9e2ba1af38 @raw="/path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-11-07 20:58:17 UTC, @version="ddr-antivirus 1.2.0">
 ```
 
 ## Contributing
