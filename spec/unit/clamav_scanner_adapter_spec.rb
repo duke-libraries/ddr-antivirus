@@ -35,9 +35,10 @@ module Ddr
           describe "result" do
             subject { adapter.scan(path) }
             let(:adapter) { described_class.new }
-            it "should be a scan result" do
-              expect(subject).to be_a(Ddr::Antivirus::ScanResult)
+            it "should be a ClamavScanResult" do
+              expect(subject).to be_a(ClamavScanResult)
             end
+            it_should_behave_like "a scan result"
             context "when a virus is found" do
               before { allow(adapter.engine).to receive(:scanfile).with(path) { "Bad boy 35" } }
               it "the raw result should be the virus description" do
