@@ -3,29 +3,30 @@ module Ddr
     RSpec.describe Scanner do
 
       shared_examples "a scanner" do
-        describe "when a virus is found" do
-          before do
-            allow_any_instance_of(ScanResult).to receive(:has_virus?) { true }
+        let(:path) { "/tmp/foo" }
+        describe "logging" do
+          it "should log the result" do
+            expect(Ddr::Antivirus.logger).to receive(:info)
+            subject.scan(path)
           end
+        end
+        describe "when a virus is found" do
+          before { allow_any_instance_of(ScanResult).to receive(:has_virus?) { true } }
           it "should raise an execption" do
-            expect { subject.scan("/tmp/foo") }.to raise_error
+            expect { subject.scan(path) }.to raise_error
           end
         end
         describe "when a virus is not found" do
-          before do
-            allow_any_instance_of(ScanResult).to receive(:has_virus?) { false }
-          end
+          before { allow_any_instance_of(ScanResult).to receive(:has_virus?) { false } }
           it "should return the scan result" do
-            expect(subject.scan("/tmp/foo")).to be_a(ScanResult)
+            expect(subject.scan(path)).to be_a(ScanResult)
           end
         end
         describe "when an error occurs in the scanner" do
-          before do
-            allow_any_instance_of(ScanResult).to receive(:error?) { true }
-          end
+          before { allow_any_instance_of(ScanResult).to receive(:error?) { true } }
           it "should log an error" do
             expect(Ddr::Antivirus.logger).to receive(:error)
-            subject.scan("/tmp/foo")
+            subject.scan(path)
           end
         end
       end
