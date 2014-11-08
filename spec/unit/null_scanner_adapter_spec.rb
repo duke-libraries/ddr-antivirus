@@ -12,7 +12,7 @@ module Ddr
           subject { adapter.scan(path) }
           let(:adapter) { described_class.new }
           it "should be a NullScanResult" do
-            expect(subject).to be_a(Ddr::Antivirus::Adapters::NullScannerAdapter::NullScanResult)
+            expect(subject).to be_a(NullScanResult)
           end
           it_should_behave_like "a scan result"
           it_should_behave_like "a successful scan result"

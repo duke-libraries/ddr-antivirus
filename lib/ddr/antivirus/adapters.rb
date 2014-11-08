@@ -1,5 +1,3 @@
-require_relative "./adapters/scanner_adapter"
-
 module Ddr
   module Antivirus
     module Adapters

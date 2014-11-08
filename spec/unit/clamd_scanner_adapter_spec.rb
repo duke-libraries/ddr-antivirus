@@ -12,8 +12,9 @@ module Ddr
           subject { adapter.scan(path) }
           let(:adapter) { described_class.new }
           it "should be a scan result" do
-            expect(subject).to be_a(Ddr::Antivirus::ScanResult)
+            expect(subject).to be_a(ClamdScanResult)
           end
+          it_should_behave_like "a scan result"
           context "when a virus is found" do
             before { allow(adapter).to receive(:clamdscan).with(path) { "#{path}: Bad-boy-35 FOUND" } }
             it "should have a virus_found" do

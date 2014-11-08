@@ -1,8 +1,12 @@
-require 'clamav'
+require "clamav"
+
+require_relative "scanner_adapter"
+require_relative "scan_result"
 
 module Ddr
   module Antivirus
     module Adapters
+
       class ClamavScannerAdapter < ScannerAdapter
 
         def scan(path)
@@ -31,39 +35,43 @@ module Ddr
           ClamAV.instance
         end
 
-        class ClamavScanResult < Ddr::Antivirus::ScanResult
+      end
 
-          def virus_found
-            raw if has_virus?
-          end
+      #
+      # Result of a scan with the ClamavScannerAdapter.
+      #
+      class ClamavScanResult < ScanResult
 
-          def has_virus?
-            ![0, 1].include?(raw)
-          end
+        def virus_found
+          raw if has_virus?
+        end
 
-          def error?
-            raw == 1
-          end
+        def has_virus?
+          ![0, 1].include?(raw)
+        end
 
-          def status
-            return "FOUND #{virus_found}" if has_virus?
-            return "ERROR" if error?
-            "OK"
-          end
+        def error?
+          raw == 1
+        end
 
-          def to_s
-            "#{file_path}: #{status} (#{version})"
-          end
+        def status
+          return "FOUND #{virus_found}" if has_virus?
+          return "ERROR" if error?
+          "OK"
+        end
 
-          def default_version
-            # Engine and database versions
-            # E.g., ClamAV 0.98.3/19010/Tue May 20 21:46:01 2014
-            `sigtool --version`.strip
-          end
+        def to_s
+          "#{file_path}: #{status} (#{version})"
+        end
 
+        def default_version
+          # Engine and database versions
+          # E.g., ClamAV 0.98.3/19010/Tue May 20 21:46:01 2014
+          `sigtool --version`.strip
         end
 
       end
+
     end
   end
 end

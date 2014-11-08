@@ -1,7 +1,8 @@
-require "ddr/antivirus/version"
-require "ddr/antivirus/scanner"
-require "ddr/antivirus/scan_result"
-require "ddr/antivirus/adapters"
+require "logger"
+
+require_relative "antivirus/version"
+require_relative "antivirus/scanner"
+require_relative "antivirus/adapters"
 
 require "active_support/core_ext/module/attribute_accessors"
 
@@ -23,7 +24,6 @@ module Ddr
       if defined?(Rails) && Rails.logger
         Rails.logger
       else 
-        require "logger"
         Logger.new(STDERR)    
       end
     end
