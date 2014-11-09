@@ -24,7 +24,7 @@ Or install it yourself as:
 Ddr::Antivirus does *not* provide a virus scanning engine as a runtime dependency. Instead, it will select a scanner adapter class for the software it finds in your environment following this procedure:
 
 - If the [clamav](https://github.com/eagleas/clamav) gem is available, it will select the `ClamavScannerAdapter`.
-- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.  Ddr::Antivirus *does not* manage clamd -- that includes checking its status, starting or reloading the database.  These tasks must be managed externally.
+- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.  Ddr::Antivirus *does not* manage clamd -- i.e., checking its status, starting or reloading the database.  These tasks must be managed externally.
 - Otherwise, it will select the [`NullScannerAdapter`](#the-nullscanneradapter).
 
 The auto-selection process may be overridden by configuration:
@@ -57,7 +57,7 @@ The scanner raises a `Ddr::Antivirus::VirusFoundError` exception if a virus is f
 
 ### Results
 
-Class: `Ddr::Antivirus::ScanResult`
+Class: `Ddr::Antivirus::Adapters::ScanResult`
 
 A scanner adapter may subclass the base class to parse the raw result properly.
 
@@ -66,7 +66,7 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 => true
 
 >> result = Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
-=> #<Ddr::Antivirus::Adapters::ClamavScannerAdapter::ClamavScanResult:0x007f98fb169cc0 ...
+=> #<Ddr::Antivirus::Adapters::ClamavScanResult:0x007f98fb169cc0 ...
 
 # Was there a virus?
 >> result.has_virus?
@@ -91,7 +91,7 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 
 ### Logging
 
-In a Rails application, Ddr::Antivirus will log messages to the Rails logger by default. The fallback logger writes to the null device (`File::NULL`).  To configure the logger:
+In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to the null device (`File::NULL`).  To configure the logger:
 
 ```ruby
 require "logger"
@@ -107,7 +107,7 @@ In order to avoid the overhead of ClamAV in test and/or development environments
 => :null
 >> Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
 I, [2014-11-07T15:58:17.706866 #82651]  INFO -- : /path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter. (ddr-antivirus 1.2.0)
-=> #<Ddr::Antivirus::ScanResult:0x007f9e2ba1af38 @raw="/path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-11-07 20:58:17 UTC, @version="ddr-antivirus 1.2.0">
+=> #<Ddr::Antivirus::Adapters::NullScanResult:0x007f9e2ba1af38 @raw="/path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-11-07 20:58:17 UTC, @version="ddr-antivirus 1.2.0">
 ```
 
 ## Contributing
