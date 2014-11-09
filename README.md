@@ -91,16 +91,16 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 
 ### Logging
 
-In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to the null device (`File::NULL`).  To configure the logger:
+In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to STDERR.  You may also explicitly set `Ddr::Antivirus.logger` to any object that supports the Ruby logger API:
 
 ```ruby
 require "logger"
-Ddr::Antivirus.logger = Logger.new(...)
+Ddr::Antivirus.logger = Logger.new("/path/to/custom.log")
 ```
 
 ### The NullScannerAdapter
 
-In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter that logs a message and returns a scan result object (instance of Ddr::Antivirus::ScanResult).
+In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter:
 
 ```ruby
 >> Ddr::Antivirus.scanner_adapter = :null
