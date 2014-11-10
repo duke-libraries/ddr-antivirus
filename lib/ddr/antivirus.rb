@@ -41,7 +41,7 @@ module Ddr
         require "clamav"
         :clamav
       rescue LoadError
-        if system "which -s clamdscan"
+        if system "which -a clamdscan"
           :clamd
         else
           :null
