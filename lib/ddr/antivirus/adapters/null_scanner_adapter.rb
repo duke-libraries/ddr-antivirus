@@ -1,3 +1,6 @@
+require_relative "scanner_adapter"
+require_relative "scan_result"
+
 module Ddr
   module Antivirus
     module Adapters
@@ -7,10 +10,16 @@ module Ddr
       class NullScannerAdapter < ScannerAdapter
 
         def scan(path)
-          Ddr::Antivirus::ScanResult.new("#{path}: NOT SCANNED - using :null scanner adapter.", path)
+          NullScanResult.new("#{path}: NOT SCANNED - using :null scanner adapter.", path)
         end
 
       end
+
+      #
+      # The result of the scan with the NullScannerAdapter.
+      #
+      class NullScanResult < ScanResult; end
+
     end
   end
 end

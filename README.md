@@ -24,7 +24,7 @@ Or install it yourself as:
 Ddr::Antivirus does *not* provide a virus scanning engine as a runtime dependency. Instead, it will select a scanner adapter class for the software it finds in your environment following this procedure:
 
 - If the [clamav](https://github.com/eagleas/clamav) gem is available, it will select the `ClamavScannerAdapter`.
-- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.
+- If the ClamAV Daemon client `clamdscan` is on the user's path, it will select the `ClamdScannerAdapter`.  Ddr::Antivirus *does not* manage clamd -- i.e., checking its status, starting or reloading the database.  These tasks must be managed externally.
 - Otherwise, it will select the [`NullScannerAdapter`](#the-nullscanneradapter).
 
 The auto-selection process may be overridden by configuration:
@@ -57,7 +57,7 @@ The scanner raises a `Ddr::Antivirus::VirusFoundError` exception if a virus is f
 
 ### Results
 
-Class: `Ddr::Antivirus::ScanResult`
+Class: `Ddr::Antivirus::Adapters::ScanResult`
 
 A scanner adapter may subclass the base class to parse the raw result properly.
 
@@ -66,7 +66,7 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 => true
 
 >> result = Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
-=> #<Ddr::Antivirus::Adapters::ClamavScannerAdapter::ClamavScanResult:0x007f98fb169cc0 ...
+=> #<Ddr::Antivirus::Adapters::ClamavScanResult:0x007f98fb169cc0 ...
 
 # Was there a virus?
 >> result.has_virus?
@@ -85,20 +85,29 @@ A scanner adapter may subclass the base class to parse the raw result properly.
 => 0 # ClamAV example
 
 # String representation (example)
->> puts result.to_s
-=> /path/to/blue-devil.png: OK (ClamAV 0.98.3/19559/Thu Oct 30 06:39:46 2014)
+>> result.to_s
+=> "/path/to/blue-devil.png: OK (ClamAV 0.98.3/19595/Thu Nov  6 11:32:29 2014)"
+```
+
+### Logging
+
+In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to STDERR.  You may also explicitly set `Ddr::Antivirus.logger` to any object that supports the Ruby logger API:
+
+```ruby
+require "logger"
+Ddr::Antivirus.logger = Logger.new("/path/to/custom.log")
 ```
 
 ### The NullScannerAdapter
 
-In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter that logs a message and returns a scan result object (instance of Ddr::Antivirus::ScanResult).
+In order to avoid the overhead of ClamAV in test and/or development environments, the package provides a no-op adapter:
 
 ```ruby
 >> Ddr::Antivirus.scanner_adapter = :null
 => :null
 >> Ddr::Antivirus::Scanner.scan("/path/to/blue-devil.png")
-W, [2014-10-30T16:21:24.349542 #76244]  WARN -- : File not scanned -- using :null scanner adapter.
-I, [2014-10-30T16:21:24.350582 #76244]  INFO -- : #<Ddr::Antivirus::ScanResult:0x007ff6c98d0500 @raw="File not scanned -- using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-10-30 20:21:24 UTC, @version="ddr-antivirus 1.0.0.rc1">
+I, [2014-11-07T15:58:17.706866 #82651]  INFO -- : /path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter. (ddr-antivirus 1.2.0)
+=> #<Ddr::Antivirus::Adapters::NullScanResult:0x007f9e2ba1af38 @raw="/path/to/blue-devil.png: NOT SCANNED - using :null scanner adapter.", @file_path="/path/to/blue-devil.png", @scanned_at=2014-11-07 20:58:17 UTC, @version="ddr-antivirus 1.2.0">
 ```
 
 ## Contributing
