@@ -1,10 +1,10 @@
 # Ddr::Antivirus
 
+Pluggable antivirus service for Ruby applications.
+
 [![Gem Version](https://badge.fury.io/rb/ddr-antivirus.svg)](http://badge.fury.io/rb/ddr-antivirus)
 [![Build Status](https://travis-ci.org/duke-libraries/ddr-antivirus.svg?branch=develop)](https://travis-ci.org/duke-libraries/ddr-antivirus)
 [![Coverage Status](https://coveralls.io/repos/duke-libraries/ddr-antivirus/badge.png?branch=develop)](https://coveralls.io/r/duke-libraries/ddr-antivirus?branch=develop)
-
-Antivirus scanner for Ruby applications.
 
 ## Installation
 
