@@ -5,9 +5,7 @@ module Ddr
   module Antivirus
     module Adapters
       #
-      # ClamdScannerAdapter uses an external ClamAV daemon (clamd)
-      # 
-      # See https://github.com/soundarapandian/clamd for configuration method and options.
+      # Adapter for clamd client (clamdscan)
       #
       class ClamdScannerAdapter < ScannerAdapter
 
