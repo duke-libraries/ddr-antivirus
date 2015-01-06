@@ -41,11 +41,9 @@ module Ddr
         require "clamav"
         :clamav
       rescue LoadError
-        if system "which -a clamdscan"
-          :clamd
-        else
-          :null
-        end
+        require "open3"
+        out, status = Open3.capture2e("which -a clamdscan")
+        status.success? ? :clamd : :null
       end
     end
 
