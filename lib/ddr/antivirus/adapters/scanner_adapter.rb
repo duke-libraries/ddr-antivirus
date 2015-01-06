@@ -2,16 +2,16 @@ module Ddr
   module Antivirus
     module Adapters
       #
-      # Abstract class for scanner adapters.
-      # 
+      # @abstract Subclass and override {#scan} to implement a scanner adapter.
+      #
       class ScannerAdapter
 
-        # Scan a file path for viruses - subclasses must implement.
+        # Scan a file path for viruses.
         #
-        # @param [String] file path to scan
-        # @return [Ddr::Antivirus::ScanResult] the result
+        # @param path [String] file path to scan.
+        # @return [Ddr::Antivirus::Adapters::ScanResult] the result of the scan.
         def scan(path)
-          raise NotImplementedError
+          raise NotImplementedError, "Adapters must implement the `scan' method."
         end
 
         # Return the adapter configuration options

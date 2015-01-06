@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Ddr::Antivirus::VERSION
   spec.authors       = ["David Chandek-Stark"]
   spec.email         = ["dchandekstark@gmail.com"]
-  spec.summary       = %q{Antivirus scanning service.}
-  spec.description   = %q{Antivirus scanning service.}
+  spec.summary       = "Pluggable antivirus scanning service."
+  spec.description   = "Pluggable antivirus scanning service."
   spec.homepage      = "https://github.com/duke-libraries/ddr-antivirus"
   spec.license       = "BSD-3-Clause"
 
