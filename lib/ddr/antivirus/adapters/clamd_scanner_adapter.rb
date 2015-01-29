@@ -15,6 +15,9 @@ module Ddr
         end
 
         def clamdscan(path)
+          unless File.world_readable?(path)
+            sh "chgrp clam #{path}; chmod g+r #{path}"            
+          end
           `clamdscan --no-summary #{path}`.strip
         end
 
