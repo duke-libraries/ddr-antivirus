@@ -1,3 +1,4 @@
+require "fileutils"
 require_relative "scanner_adapter"
 require_relative "scan_result"
 
@@ -15,6 +16,16 @@ module Ddr
         end
 
         def clamdscan(path)
+          original_mode = File.stat(path).mode
+          FileUtils.chmod("a+r", path) unless File.world_readable?(path)
+          result = command(path)
+          FileUtils.chmod(original_mode, path) if File.stat(path).mode != original_mode
+          result
+        end
+
+        private
+
+        def command(path)
           `clamdscan --no-summary #{path}`.strip
         end
 
@@ -24,7 +35,7 @@ module Ddr
       # Result of a scan with the ClamdScannerAdapter
       #
       class ClamdScanResult < ScanResult
-        
+
         def virus_found
           if m = /: ([^\s]+) FOUND$/.match(raw)
             m[1]
