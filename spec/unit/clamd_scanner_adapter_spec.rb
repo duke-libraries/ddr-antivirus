@@ -7,10 +7,38 @@ module Ddr
       RSpec.describe ClamdScannerAdapter do
 
         let(:path) { File.expand_path(File.join("..", "..", "fixtures", "blue-devil.png"), __FILE__) }
+        let(:adapter) { described_class.new }
+
+        describe "permissions" do
+          before do
+            @file = Tempfile.new("test")
+            @file.write("Scan me!")
+            @file.close
+            allow(adapter).to receive(:command).with(@file.path) { "#{@file.path}: OK" }
+          end
+          after { @file.unlink }
+          describe "when the file is not world readable" do
+            it "should temporarily change the permissions" do
+              original_mode = File.stat(@file.path).mode
+              expect(FileUtils).to receive(:chmod).with("a+r", @file.path)
+              adapter.scan(@file.path)
+              expect(File.stat(@file.path).mode).to eq(original_mode)
+            end
+          end
+          describe "when the file is world readable" do
+            before { FileUtils.chmod("a+r", @file.path) }
+            it "should not change the permissions" do
+              original_mode = File.stat(@file.path).mode
+              expect(FileUtils).not_to receive(:chmod)
+              adapter.scan(@file.path)
+              expect(File.stat(@file.path).mode).to eq(original_mode)
+            end
+          end
+        end
 
         describe "result" do
           subject { adapter.scan(path) }
-          let(:adapter) { described_class.new }
+
           it "should be a scan result" do
             expect(subject).to be_a(ClamdScanResult)
           end
