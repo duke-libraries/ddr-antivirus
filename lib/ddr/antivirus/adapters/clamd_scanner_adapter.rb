@@ -26,7 +26,7 @@ module Ddr
         private
 
         def command(path)
-          `clamdscan --no-summary #{path}`.strip
+          `clamdscan --no-summary "#{path}"`.strip
         end
 
       end
