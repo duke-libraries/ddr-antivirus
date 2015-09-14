@@ -17,9 +17,9 @@ module Ddr::Antivirus
       when 0
         result
       when 1
-        raise VirusFoundError, result.to_s
+        raise VirusFoundError.new(result)
       when 2
-        raise ScannerError, result.to_s
+        raise ScannerError.new(result)
       end
     end
 
