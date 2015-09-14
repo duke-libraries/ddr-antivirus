@@ -1,5 +1,5 @@
 module Ddr
   module Antivirus
-    VERSION = "1.3.3.post"
+    VERSION = "2.0.0"
   end
 end

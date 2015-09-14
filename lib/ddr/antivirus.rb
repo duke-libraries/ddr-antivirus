@@ -2,50 +2,66 @@ require "logger"
 
 require_relative "antivirus/version"
 require_relative "antivirus/scanner"
-require_relative "antivirus/adapters"
-
-require "active_support/core_ext/module/attribute_accessors"
+require_relative "antivirus/scan_result"
+require_relative "antivirus/scanner_adapter"
+require_relative "antivirus/adapters/null_scanner_adapter"
 
 module Ddr
   module Antivirus
 
-    class VirusFoundError < ::StandardError; end
+    class Error < ::StandardError; end
 
-    def self.configure
-      yield self
-    end
-
-    #
-    # Custom logger
-    #
-    # Defaults to Rails logger if Rails is loaded; otherwise logs to STDERR.
-    #
-    mattr_accessor :logger do
-      if defined?(Rails) && Rails.logger
-        Rails.logger
-      else 
-        Logger.new(STDERR)    
+    class ResultError < Error
+      attr_reader :result
+      def initialize(result)
+        super(result.to_s)
+        @result = result
       end
     end
 
-    #
-    # Scanner adapter
-    #
-    # Defaults to:
-    # - :clamav adapter if the 'clamav' gem is installed; 
-    # - :clamd adapter if the 'clamdscan' executable is available;
-    # - otherwise, the :null adapter.
-    #
-    mattr_accessor :scanner_adapter do
-      begin
-        require "clamav"
-        :clamav
-      rescue LoadError
-        require "open3"
-        out, status = Open3.capture2e("which -a clamdscan")
-        status.success? ? :clamd : :null
+    class VirusFoundError < ResultError; end
+
+    class ScannerError < ResultError; end
+
+    class << self
+      attr_accessor :logger, :scanner_adapter
+
+      def configure
+        yield self
+      end
+
+      def scan(path)
+        Scanner.scan(path)
+      end
+
+      def scanner
+        s = Scanner.new
+        block_given? ? yield(s) : s
+      end
+
+      def test_mode!
+        configure do |config|
+          config.logger = Logger.new(File::NULL)
+          config.scanner_adapter = :null
+        end
+      end
+
+      # @return [Class] the scanner adapter class
+      def get_adapter
+        if scanner_adapter.nil?
+          raise Error, "`Ddr::Antivirus.scanner_adapter` is not configured."
+        end
+        require_relative "antivirus/adapters/#{scanner_adapter}_scanner_adapter"
+        adapter_name = scanner_adapter.to_s.capitalize + "ScannerAdapter"
+        self.const_get(adapter_name, false)
       end
     end
+
+    self.logger = if defined?(Rails) && Rails.logger
+                    Rails.logger
+                  else
+                    Logger.new(STDERR)
+                  end
 
   end
 end
