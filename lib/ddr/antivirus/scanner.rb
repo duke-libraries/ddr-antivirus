@@ -1,36 +1,16 @@
-require "active_support/core_ext/class/attribute"
+require "delegate"
 
-module Ddr
-  module Antivirus
-    class Scanner
+module Ddr::Antivirus
+  class Scanner < SimpleDelegator
       
-      # Instance of scanner adapter
-      attr_reader :adapter
-
-      def self.scan(path)
-        new { |scanner| return scanner.scan(path) }
-      end
-
-      def initialize
-        @adapter = Ddr::Antivirus::Adapters.get_adapter
-        yield self if block_given?
-      end
-
-      def scan(path)
-        result = adapter.scan(path)
-        raise Ddr::Antivirus::VirusFoundError, result if result.has_virus?
-        logger.error("Antivirus scanner error (#{result.version})") if result.error?
-        logger.info(result.to_s)
-        result
-      end
-
-      private
-
-        def logger
-          Ddr::Antivirus.logger
-        end
-
+    def self.scan(path)
+      new.scan(path)
     end
+
+    def initialize
+      super Ddr::Antivirus.get_adapter.new
+    end
+
   end
 end
 

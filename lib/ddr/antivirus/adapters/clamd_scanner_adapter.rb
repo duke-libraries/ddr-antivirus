@@ -1,69 +1,84 @@
+require "open3"
 require "fileutils"
-require_relative "scanner_adapter"
-require_relative "scan_result"
+require "shellwords"
 
-module Ddr
-  module Antivirus
-    module Adapters
-      #
-      # Adapter for clamd client (clamdscan)
-      #
-      class ClamdScannerAdapter < ScannerAdapter
+module Ddr::Antivirus
+  #
+  # Adapter for clamd client (clamdscan)
+  #
+  class ClamdScannerAdapter < ScannerAdapter
 
-        def scan(path)
-          raw = clamdscan(path)
-          ClamdScanResult.new(raw, path)
-        end
+    SCANNER = "clamdscan".freeze
 
-        def clamdscan(path)
-          original_mode = File.stat(path).mode
-          FileUtils.chmod("a+r", path) unless File.world_readable?(path)
-          result = command(path)
-          FileUtils.chmod(original_mode, path) if File.stat(path).mode != original_mode
-          result
-        end
-
-        private
-
-        def command(path)
-          `clamdscan --no-summary "#{path}"`.strip
-        end
-
+    def scan(path)
+      output, status = clamdscan(path)
+      result = ScanResult.new(path, output, version: version, scanned_at: Time.now.utc)
+      case status.exitstatus
+      when 0
+        result
+      when 1
+        raise VirusFoundError.new(result)
+      when 2
+        raise ScannerError.new(result)
       end
-
-      #
-      # Result of a scan with the ClamdScannerAdapter
-      #
-      class ClamdScanResult < ScanResult
-
-        def virus_found
-          if m = /: ([^\s]+) FOUND$/.match(raw)
-            m[1]
-          end
-        end
-
-        def has_virus?
-          raw =~ / FOUND$/
-        end
-
-        def error?
-          raw =~ / ERROR$/
-        end
-
-        def ok?
-          raw =~ / OK$/
-        end
-
-        def to_s
-          "#{raw} (#{version})"
-        end
-
-        def default_version
-          `sigtool --version`.strip
-        end
-
-      end
-
     end
+
+    def clamdscan(path)
+      make_readable(path) do
+        command(path)
+      end
+    end
+
+    def version
+      out, err, status = Open3.capture3(SCANNER, "-V")
+      out.strip
+    end
+
+    private
+
+    def command(path)
+      safe_path = Shellwords.shellescape(path)
+      Open3.capture2e(SCANNER, safe_path)
+    end
+
+    def make_readable(path)
+      changed = false
+      original = File.stat(path).mode # raises Errno::ENOENT
+      if !File.world_readable?(path)
+        changed = FileUtils.chmod("a+r", path)
+        logger.info "File #{path} made world-readable for virus scanning."
+      end
+      result = yield
+      if changed
+        FileUtils.chmod(original, path)
+        logger.info "Mode reset to original #{original} on file #{path}."
+      end
+      result
+    end
+
+  end
+
+  # Result of a scan with the ClamdScannerAdapter
+  # @api private
+  class ClamdScanResult < ScanResult
+
+    def virus_found
+      if m = /: ([^\s]+) FOUND$/.match(output)
+        m[1]
+      end
+    end
+
+    def ok?
+      status.exitstatus == 0
+    end
+
+    def has_virus?
+      status.exitstatus == 1
+    end
+
+    def error?
+      status.exitstatus == 2
+    end
+
   end
 end

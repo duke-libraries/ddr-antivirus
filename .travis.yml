@@ -1,15 +1,8 @@
+sudo: false
 language: ruby
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -y libclamav-dev clamav clamav-daemon clamav-freshclam
-before_script:
-  - sudo freshclam
-  - sudo /etc/init.d/clamav-daemon start
 rvm:
   - 2.1
+  - 2.2
 cache: 
   - bundler
-  - apt
-notifications:
-  email:
-    - lib-drs@duke.edu
+
