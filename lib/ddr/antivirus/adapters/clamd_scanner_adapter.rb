@@ -26,6 +26,7 @@ module Ddr::Antivirus
     end
 
     def clamdscan(path)
+      check_file_size(path) if max_file_size
       output = make_readable(path) do
         command "--fdpass", safe_path(path)
       end
@@ -42,11 +43,18 @@ module Ddr::Antivirus
 
     def max_file_size
       if m = MAX_FILE_SIZE_RE.match(config)
-        m[1]
+        m[1].to_i
       end
     end
 
     private
+
+    def check_file_size(path)
+      if (file_size = File.size(path)) > max_file_size
+        raise MaxFileSizeExceeded, "Unable to scan file \"#{path}\" because size (#{file_size})" \
+                                   " exceeds clamconf MaxFileSize (#{max_file_size})."
+      end
+    end
 
     def command(*args)
       cmd = args.dup.unshift(SCANNER).join(" ")

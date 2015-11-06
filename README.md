@@ -31,16 +31,6 @@ Ddr::Antivirus.scanner do |scanner|
 end
 ```
 
-### Exceptions
-
-All exceptions under the `Ddr::Antivirus` namespace.
-
-`Error` - Parent exception class.
-
-`VirusFoundError` - A virus was found. The message includes the original output from the scanner.
-
-`ScannerError` - The scanner encountered an error (e.g., error exit status).
-
 ### Example
 
 ```
@@ -74,7 +64,7 @@ Time: 0.001 sec (0 m 0 s)
 
 ### Logging
 
-In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to STDERR.  You may also explicitly set `Ddr::Antivirus.logger` to any object that supports the Ruby logger API:
+In a Rails application, `Ddr::Antivirus` will log messages to the Rails logger by default. The fallback logger writes to `STDERR`.  You may also explicitly set `Ddr::Antivirus.logger` to any object that supports the Ruby logger API:
 
 ```ruby
 require "logger"
