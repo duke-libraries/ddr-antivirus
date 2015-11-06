@@ -1,6 +1,7 @@
 require "logger"
 
 require_relative "antivirus/version"
+require_relative "antivirus/exceptions"
 require_relative "antivirus/scanner"
 require_relative "antivirus/scan_result"
 require_relative "antivirus/scanner_adapter"
@@ -8,20 +9,6 @@ require_relative "antivirus/adapters/null_scanner_adapter"
 
 module Ddr
   module Antivirus
-
-    class Error < ::StandardError; end
-
-    class ResultError < Error
-      attr_reader :result
-      def initialize(result)
-        super(result.to_s)
-        @result = result
-      end
-    end
-
-    class VirusFoundError < ResultError; end
-
-    class ScannerError < ResultError; end
 
     class << self
       attr_accessor :logger, :scanner_adapter
