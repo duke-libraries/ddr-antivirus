@@ -1,0 +1,43 @@
+stages:
+  - build
+  - test
+
+build_23:
+  stage: build
+  script:
+    - docker build -f .docker/Dockerfile.ruby23 -t ddr-antivirus-ruby23 .
+
+test_23:
+  stage: test
+  script:
+    - docker run --rm ddr-antivirus-ruby23
+
+build_24:
+  stage: build
+  script:
+    - docker build -f .docker/Dockerfile.ruby24 -t ddr-antivirus-ruby24 .
+
+test_24:
+  stage: test
+  script:
+    - docker run --rm ddr-antivirus-ruby24
+
+build_25:
+  stage: build
+  script:
+    - docker build -f .docker/Dockerfile.ruby25 -t ddr-antivirus-ruby25 .
+
+test_25:
+  stage: test
+  script:
+    - docker run --rm ddr-antivirus-ruby25
+
+.build_26:
+  stage: build
+  script:
+    - docker build -f .docker/Dockerfile.ruby26 -t ddr-antivirus-ruby26 .
+
+.test_26:
+  stage: test
+  script:
+    - docker run --rm ddr-antivirus-ruby26
