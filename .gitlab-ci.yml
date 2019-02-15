@@ -13,11 +13,8 @@ test_23:
   stage: test
   before_script:
     - cd .docker/ruby23
-    - docker-compose up -d
   script:
     - docker-compose run --rm app bundle exec rake
-  after_script:
-    - docker-compose down
 
 build_24:
   stage: build
@@ -30,11 +27,8 @@ test_24:
   stage: test
   before_script:
     - cd .docker/ruby24
-    - docker-compose up -d
   script:
     - docker-compose run --rm app bundle exec rake
-  after_script:
-    - docker-compose down
 
 build_25:
   stage: build
@@ -47,8 +41,5 @@ test_25:
   stage: test
   before_script:
     - cd .docker/ruby25
-    - docker-compose up -d
   script:
     - docker-compose run --rm app bundle exec rake
-  after_script:
-    - docker-compose down
