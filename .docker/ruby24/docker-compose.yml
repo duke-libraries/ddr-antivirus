@@ -17,5 +17,3 @@ services:
     image: clamav
     build:
       context: ../clamav
-    ports:
-      - "3310:3310"
