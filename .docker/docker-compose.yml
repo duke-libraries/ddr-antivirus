@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  app:
+    image: "ddr-antivirus-ruby-${RUBY_IMAGE_TAG}"
+    build:
+      context: ..
+      dockerfile: .docker/Dockerfile
+      args:
+        - RUBY_IMAGE_TAG
+    depends_on:
+      - clamav
+
+  clamav:
+    image: clamav
+    build:
+      context: ./clamav

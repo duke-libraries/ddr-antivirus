@@ -2,44 +2,54 @@ stages:
   - build
   - test
 
+variables:
+  COMPOSE_FILE: "${CI_PROJECT_DIR}/.docker/docker-compose.yml"
+
 build_23:
   stage: build
-  before_script:
-    - cd .docker/ruby23
+  variables:
+    RUBY_IMAGE_TAG: "2.3"
   script:
     - docker-compose build
 
 test_23:
   stage: test
-  before_script:
-    - cd .docker/ruby23
+  variables:
+  variables:
+    RUBY_IMAGE_TAG: "2.3"
   script:
     - docker-compose run --rm app bundle exec rake
+  after_script:
+    - docker-compose down
 
 build_24:
   stage: build
-  before_script:
-    - cd .docker/ruby24
+  variables:
+    RUBY_IMAGE_TAG: "2.4"
   script:
     - docker-compose build
 
 test_24:
   stage: test
-  before_script:
-    - cd .docker/ruby24
+  variables:
+    RUBY_IMAGE_TAG: "2.4"
   script:
-    - docker-compose run --rm app bundle exec rake
+    - docker-compose run --rm -e CLAMAV_PORT=3311 app bundle exec rake
+  after_script:
+    - docker-compose down
 
 build_25:
   stage: build
-  before_script:
-    - cd .docker/ruby25
+  variables:
+    RUBY_IMAGE_TAG: "2.5"
   script:
     - docker-compose build
 
 test_25:
   stage: test
-  before_script:
-    - cd .docker/ruby25
+  variables:
+    RUBY_IMAGE_TAG: "2.5"
   script:
-    - docker-compose run --rm app bundle exec rake
+    - docker-compose run --rm -e CLAMAV_PORT=3312 app bundle exec rake
+  after_script:
+    - docker-compose down
