@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  app:
+    image: ddr-antivirus-ruby24
+    build:
+      context: ../..
+      dockerfile: .docker/ruby24/Dockerfile
+    depends_on:
+      - clamav
+    entrypoint:
+      - wait-for-it
+      - clamav:3310
+      - "--"
+
+  clamav:
+    image: clamav
+    build:
+      context: ../clamav
+    ports:
+      - "3310:3310"

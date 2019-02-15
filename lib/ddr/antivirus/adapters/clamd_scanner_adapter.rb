@@ -38,7 +38,9 @@ module Ddr::Antivirus
     end
 
     def config
-      @config ||= `#{CONFIG}`
+      # If client and server are on separate hosts
+      # attempt to read config may raise an exception.
+      @config ||= `#{CONFIG}` rescue nil
     end
 
     def max_file_size
