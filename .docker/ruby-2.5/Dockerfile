@@ -1,8 +1,7 @@
 FROM ruby:2.5
 
 RUN apt-get update -qq && \
-	apt-get install -y clamav-daemon vim less && \
-	freshclam
+	apt-get install -y clamdscan wait-for-it vim less
 
 WORKDIR /src
 COPY . .
@@ -12,4 +11,3 @@ RUN gem install bundler -N && \
 COPY .docker/docker-entrypoint.sh /usr/bin/
 RUN chmod u+x /usr/bin/docker-entrypoint.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["bundle", "exec", "rake"]
