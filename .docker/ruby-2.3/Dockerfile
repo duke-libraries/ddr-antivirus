@@ -1,3 +1,5 @@
+FROM ruby:2.3
+
 RUN apt-get update -qq && \
 	apt-get install -y clamdscan wait-for-it vim less
 

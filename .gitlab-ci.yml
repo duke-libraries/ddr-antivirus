@@ -2,9 +2,6 @@ stages:
   - build
   - test
 
-variables:
-  COMPOSE_FILE: "${CI_PROJECT_DIR}/.docker/docker-compose.yml"
-
 build_clamav:
   stage: build
   before_script:
@@ -19,10 +16,8 @@ build_23:
   before_script:
     - docker --version
     - docker-compose --version
-    - 'echo "FROM ruby:2.3" > Dockerfile'
-    - cat .docker/Dockerfile >> Dockerfile
   script:
-    - docker build -t ddr-antivirus-ruby-2.3 .
+    - docker-compose -f .docker/ruby-2.3/docker-compose.yml build
 
 test_23:
   stage: test
@@ -30,19 +25,17 @@ test_23:
     - docker --version
     - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.3 app bundle exec rake
+    - docker-compose -f .docker/ruby-2.3/docker-compose.yml run --rm app bundle exec rake
   after_script:
-    - docker-compose down
+    - docker-compose -f .docker/ruby-2.3/docker-compose.yml down
 
 build_24:
   stage: build
   before_script:
     - docker --version
     - docker-compose --version
-    - 'echo "FROM ruby:2.4" > Dockerfile'
-    - cat .docker/Dockerfile >> Dockerfile
   script:
-    - docker build -t ddr-antivirus-ruby-2.4 .
+    - docker-compose -f .docker/ruby-2.4/docker-compose.yml build
 
 test_24:
   stage: test
@@ -50,19 +43,17 @@ test_24:
     - docker --version
     - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.4 app bundle exec rake
+    - docker-compose -f .docker/ruby-2.4/docker-compose.yml run --rm app bundle exec rake
   after_script:
-    - docker-compose down
+    - docker-compose -f .docker/ruby-2.4/docker-compose.yml down
 
 build_25:
   stage: build
   before_script:
     - docker --version
     - docker-compose --version
-    - 'echo "FROM ruby:2.5" > Dockerfile'
-    - cat .docker/Dockerfile >> Dockerfile
   script:
-    - docker build -t ddr-antivirus-ruby-2.5 .
+    - docker-compose -f .docker/ruby-2.5/docker-compose.yml build
 
 test_25:
   stage: test
@@ -70,6 +61,6 @@ test_25:
     - docker --version
     - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.5 app bundle exec rake
+    - docker-compose -f .docker/ruby-2.5/docker-compose.yml run --rm app bundle exec rake
   after_script:
-    - docker-compose down
+    - docker-compose -f .docker/ruby-2.5/docker-compose.yml down

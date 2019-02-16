@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  app:
+    image: ddr-antivirus-ruby-2.3
+    build:
+      context: ../..
+      dockerfile: .docker/ruby-2.3/Dockerfile
+    depends_on:
+      - clamav
+
+  clamav:
+    image: clamav
