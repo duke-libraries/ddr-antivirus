@@ -7,42 +7,60 @@ variables:
 
 build_clamav:
   stage: build
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
     - cd .docker/clamav
     - docker build -t clamav .
 
 build_23:
   stage: build
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
-    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.3 -t ddr-antivirus-ruby-2.3 .
+    - 'docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.3 -t ddr-antivirus-ruby-2.3 .'
 
 test_23:
   stage: test
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.3 app bundle exec rake
+    - 'docker-compose run --rm -e RUBY_IMAGE_TAG=2.3 app bundle exec rake'
   after_script:
     - docker-compose down
 
 build_24:
   stage: build
   script:
-    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.4 -t ddr-antivirus-ruby-2.4 .
+    - 'docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.4 -t ddr-antivirus-ruby-2.4 .'
 
 test_24:
   stage: test
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.4 app bundle exec rake
+    - 'docker-compose run --rm -e RUBY_IMAGE_TAG=2.4 app bundle exec rake'
   after_script:
     - docker-compose down
 
 build_25:
   stage: build
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
-    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.5 -t ddr-antivirus-ruby-2.5 .
+    - 'docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.5 -t ddr-antivirus-ruby-2.5 .'
 
 test_25:
   stage: test
+  before_script:
+    - docker --version
+    - docker-compose --version
   script:
-    - docker-compose run --rm -e RUBY_IMAGE_TAG=2.5 app bundle exec rake
+    - 'docker-compose run --rm -e RUBY_IMAGE_TAG=2.5 app bundle exec rake'
   after_script:
     - docker-compose down
