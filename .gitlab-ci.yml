@@ -8,12 +8,12 @@ variables:
 build_clamav:
   stage: build
   script:
-    - docker-compose build clamav
+    - docker build -f .docker/clamav/Dockerfile
 
 build_23:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.3 app
+    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.3 -t ddr-antivirus-ruby-2.3
 
 test_23:
   stage: test
@@ -25,7 +25,7 @@ test_23:
 build_24:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.4 app
+    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.4 -t ddr-antivirus-ruby-2.4
 
 test_24:
   stage: test
@@ -37,7 +37,7 @@ test_24:
 build_25:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.5 app
+    - docker build -f .docker/Dockerfile --build-arg RUBY_IMAGE_TAG=2.5 -t ddr-antivirus-ruby-2.5
 
 test_25:
   stage: test
