@@ -5,10 +5,15 @@ stages:
 variables:
   COMPOSE_FILE: "${CI_PROJECT_DIR}/.docker/docker-compose.yml"
 
+build_clamav:
+  stage: build
+  script:
+    - docker-compose build clamav
+
 build_23:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.3 app clamav
+    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.3 app
 
 test_23:
   stage: test
@@ -20,7 +25,7 @@ test_23:
 build_24:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.4 app clamav
+    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.4 app
 
 test_24:
   stage: test
@@ -32,7 +37,7 @@ test_24:
 build_25:
   stage: build
   script:
-    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.5 app clamav
+    - docker-compose build --build-arg RUBY_IMAGE_TAG=2.5 app
 
 test_25:
   stage: test
