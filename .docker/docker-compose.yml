@@ -6,8 +6,6 @@ services:
     build:
       context: ..
       dockerfile: .docker/Dockerfile
-      args:
-        - RUBY_IMAGE_TAG
     depends_on:
       - clamav
 
