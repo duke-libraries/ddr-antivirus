@@ -1,6 +1,3 @@
-ARG RUBY_IMAGE_TAG
-FROM ruby:${RUBY_IMAGE_TAG}
-
 RUN apt-get update -qq && \
 	apt-get install -y clamdscan wait-for-it vim less
 
