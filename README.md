@@ -1,5 +1,7 @@
 # Ddr::Antivirus
 
+**This repository has moved to: https://gitlab.oit.duke.edu/ddr/ddr-antivirus.**
+
 Pluggable antivirus service for Ruby applications.
 
 [![Gem Version](https://badge.fury.io/rb/ddr-antivirus.svg)](http://badge.fury.io/rb/ddr-antivirus)
